@@ -1,0 +1,79 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+
+#if 1
+int main(void)
+{
+	unsigned char a1 = 0xa1;
+	unsigned char a2 = 0xe1;
+	unsigned char pattern[4] = { 0x1F, 0x11, 0x11, 0x1F };
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if ((pattern[i] >> j) & 0x01)
+			{
+				printf("%c%c", a1, a2);
+			}
+			else
+			{
+				printf(" ");
+			}
+		}
+		printf("\n");
+	}
+
+	return 0;
+}
+#endif
+
+// 핵심 아이디어 : 아래의 코드를 16진수로 표현
+/*
+{
+		{1,1,1,1,1},
+		{1,0,0,0,1},
+		{1,0,0,0,1},
+		{1,1,1,1,1}
+};
+*/
+// 1 1 1 1 1 을 16진수로 변환
+// 0001 1111 이므로 0x1F와 동일
+// 1 0 0 0 1 을 16진수로 변환
+// 0001 0001 이므로 0x11과 동일
+// 이후 쉬프트 연산으로 오른쪽으로 옮기며 연산
+
+#if 0
+int main(void)
+{
+	unsigned char a1 = 0xa1;
+	unsigned char a2 = 0xe1;
+	unsigned char pattern[4][5] = 
+	{
+	{1,1,1,1,1},
+	{1,0,0,0,1},
+	{1,0,0,0,1},
+	{1,1,1,1,1}
+	};
+	
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if ((pattern[i][j]))
+			{
+				printf("%c%c", a1, a2);
+			}
+			else
+			{
+				printf(" ");
+			}
+		}
+		printf("\n");
+	}
+
+	return 0;
+}
+#endif
