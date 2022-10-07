@@ -1,0 +1,23 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <string.h>
+
+int main(void){
+
+  int n = 0;  // 입력 비트
+  int i = 0;  // 바꿀 비트자리수
+  int ans = 0; 
+  
+  scanf("%d", &n);
+  
+  // 반드시 1로 만들어라
+  ans = n | 1 << i ;
+  // or 비트연산을 이용.
+  
+  // 반드시 0으로 만들어라
+  ans = n & ~(1 << i);
+  // not and 비트연산을 이용.
+  
+	return 0;
+}
