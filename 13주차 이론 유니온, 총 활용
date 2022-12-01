@@ -1,0 +1,248 @@
+#include <stdio.h>
+#include <math.h>
+
+// 쉬운 암호화 프로그램
+// 리틀엔디안 빅에디안을 손쉽게 바꿀 수 있다.
+int en(int i);
+
+int main() {
+	int i;
+
+	i = en(10);
+	printf("10 is %d\n", i);
+	i = en(i);
+	printf("i is %d", i);
+}
+
+int en(int i) {
+
+	union cry_type {
+		int num;
+		char c[2];
+	}cry;
+
+	unsigned char ch;
+
+	cry.num = i;
+
+	ch = cry.c[0];
+	cry.c[0] = cry.c[1];
+	cry.c[1] = ch;
+
+	return cry.num;
+}
+
+// 
+// 공용체 union
+// 두개 이상의 변수들이 같은 메모리를 공유하게 하는 것.
+// 서로 다른 자료형을 가질 수 있다.
+// 구조체와 유사하지만 구조체는 모든 자료가 별개의 메모리를 할당받지만 
+// 공용체는 공유되는 여러 자료형 중 가장 큰 자료형만큼 메모리를 확보한다.
+// 한 번에 한 멤버만 사용될 수 있기 때문에 초기화도 하나의 멤버에 대해서만 할 수 있다.
+// 
+// union u_tog{
+// double d_rum;
+// int i_num;
+// char ch;
+// }
+// 가장 큰 double형으로 메모리가 잡히고 공유해 사용한다.
+// 8칸이 생기고 낮은 번지부터 4칸이 int 1칸이 char로 서로 공유한다.
+// 
+// 구조체처럼 도트 연산자와 화살표 연산자를 이용함.
+// 
+// union data{
+// char a;
+// short int b;
+// int c';
+// };
+// 
+// main(){
+// union data value;
+// 
+// value.c = (int)0x12345678; // 초기화. 리틀엔디안을 뒤집어서 들어감.
+// 
+// printf("%x", value.a);	// 78
+// printf("%x", value.b);	// 5678
+// printf("%x", value.c);	// 12345678
+//}
+//
+// 낮은 번지에 맞춰서 공유됨.
+// 초기화는 한 값에 대해서만 해야함.
+// 
+// char로 받은 key를 한 비트씩 컨트롤할 수 있다. 굉장히 강력하다.
+/*
+struct sample {
+	unsigned a : 1;
+	unsigned b : 1;
+	unsigned c : 1;
+	unsigned d : 1;
+	unsigned e : 1;
+	unsigned f : 1;
+	unsigned g : 1;
+	unsigned h : 1;
+};
+
+union key_type {
+	char ch;
+	struct sample bits;
+}key;
+*/
+//
+// 함수 포인터(function pointer)
+// 함수도 메모리에 코드 형태로 존재하고 따라서 함수도 주소를 가짐.
+// 함수를 실행한다는 것은 해당 함수의 주소로 위치를 옮겨 실행한 뒤, 원래 위치로 돌아오는 것.
+// 모든 함수는 해당 주소를 가지고 있음. 실행 = 해당 주소로 점프&처리&리턴
+// 
+// 반환형 (*함수포인터이름)(매개변수1, 매개변수2, ...); 
+//
+/*
+int add(int, int);
+int sub(int, int);
+
+int main(void)
+{
+	int result;
+	int (*pf)(int, int);
+
+	pf = add;
+	result = pf(10, 20);
+	printf("%d", result);
+
+	pf = sub;
+	result = sub(10, 20);
+	printf("%d", result);
+
+	return 0;
+}
+
+int add(int x, int y)
+{
+	return x + y;
+}
+
+int sub(int x, int y)
+{
+	return x - y;
+}
+*/
+
+//
+// 함수 포인터의 배열
+// 반환형 (*배열이름[배열의 크기])(매개변수목록);
+// int (*pf[5])(int, int);
+// 함수 이름이 pf[0]부터 pf[4]까지
+// 
+/*
+int add(int, int);
+int sub(int, int);
+int mul(int, int):
+int div(int, int);
+
+int main() {
+	int choice, result, x, y;
+	int (*pf[4])(int, int) = { add, sub, mul, div };
+
+	while (1)
+	{
+		scanf("%d", &choice);
+
+		if (choice < 0 || choice >= 4)
+		{
+			break;
+		}
+
+		printf("2개의 정수를 입력하시오.\n");
+
+		result = pf[choice](x, y);
+
+		printf("연산 결과 = %d\n", result);
+	}
+}
+int add(int x, int y)
+{
+	return x + y;
+}
+
+int sub(int x, int y)
+{
+	return x - y;
+}
+int mul(int x, int y)
+{
+	return x * y;
+}
+
+int div(int x, int y)
+{
+	return x / y;
+}
+*/
+// 함수의 인자로 함수를 받을 수도 있다.
+/*
+double f1(double k);
+double f2(double k);
+double formula(double(*pf)(double), int n);
+
+double formula(double (*pf)(double), int n) {
+	int i;
+	double sum = 0.0;
+
+	for (i = 0; i < n; i++)
+	{
+		sum = sum + pf(i) * pf(i) + pf(i) + 1;	// 여러번 pf(i)를 호출하는 것은 비효율적임.
+	}
+	return sum;
+}
+double f1(double k) {
+	return 1.0 / k;
+}
+double f1(double k) {
+	return cos(k);
+}
+*/
+// 시작 주소와 끝 주소만 안다면 1차원 포인터로 배열을 조질 수 있다.
+/*
+double get_row_avg(int m[][COLS], int r) {
+	int* p, * endp;
+	double sum = 0.0;
+
+	p = &m[r][0];
+	endp = [r][COLS];
+
+	while (p < endp)
+	{
+		sum += *p++;
+	}
+
+	sum / = COLS;
+
+	return sum;
+}
+*/
+//
+// void 포인터
+// 순수하게 메모리의 주소만 가지고 있는 포인터
+// 가리키는 대상물은 아직 정해지지 않음
+// void *vp;
+// *vp;	// 오류
+// vp++;	// 오류
+// vp--;	// 오류
+// 사이즈가 정해지지 않았기 때문에 할 수 없다.
+// int a[];
+// void* vp;
+// vp = a;	// 가능
+// vp = &a[2];	// 가능
+// 
+// int main() 도 ()에 void 가 아니라 값을 넣을 수 있음.
+// int main(int argc, char *argv[])
+// 
+// VS에서 속성에 디버깅 명령 인수 로 프로그램 인수 입력이 가능하다.
+// 
+// 공부할 것. 
+// int abc(char**){return p[1][3] + 1;}	// 더블 포인터는 이렇게 사용할 수 없다. 마지막 배열의 크기를 모르기 때문에.
+// 이진탐색하는 프로그램. 포인터로 옮겨라~ 몇 차원 배열이든 1차원 포인터로 조져버려라~
+// 만 나이 계산하는 프로그램. 몇년 몇원 몇일 태어났는지 입력하고, 만나이를 계산, 산 날을 계산 등
+// 배열 통째로 스왑하는 프로그램
+// 문자열 함수를 구현하는 프로그램. 조건이 빡빡한 경우. 변수를 쓰지마라, for 루프를 쓰지마라 등
+// char *a = "123", b[] = "123", c[3] = {1,2,3} 의 차이점과 공통점을 구체적으로 잘 이해해라
+// 
